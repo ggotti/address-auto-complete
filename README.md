@@ -2,6 +2,10 @@
 
 This small application demonstrates an Australia address autocomplete AWS Lambda function, using the [G-NAF](https://data.gov.au/dataset/ds-dga-19432f89-dc3a-4ef3-b943-5326ef1dbecc/details?q=) dataset.
 
+
+https://user-images.githubusercontent.com/1842134/117966230-057ccb00-b367-11eb-9698-798174a1b25b.mp4
+
+
 It's deployable using the Serverless Application Model Command Line Interface (SAM CLI).
 
 ## Prequrisites
