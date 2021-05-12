@@ -1,0 +1,86 @@
+<html>
+<head>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@9.1.1/dist/css/autoComplete.min.css">
+    <style>
+        .address_list {
+            margin-left: 0;
+            margin-right: 0;
+            margin-block-start: 0;
+            margin-block-end: 0;
+            padding-inline-start: 0;
+        }
+
+        .autoComplete_result {
+            list-style: none;
+            font-size: 0.8rem;
+            color: #212121;
+            transition: all .1s ease-in-out;
+            border-radius: .35rem;
+            background-color: #fff;
+            white-space: unset;
+            overflow: unset;
+            overflow-wrap: break-word;
+            height: 8em;
+            width: 100%;
+            border-bottom: 1px solid gray;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    GNAF-Address Autocomplete
+</h1>
+<div class="autoComplete_wrapper">
+    <input type="search" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="on"
+           id="autoComplete">
+</div>
+<div id="addressList"></div>
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@9.1.1/dist/js/autoComplete.min.js"></script>
+<script>
+    new autoComplete({
+        selector: "#autoComplete",
+        placeHolder: "Address Lookup...",
+        threshold: 5,
+        debounce: 300,
+        data: {
+            src: async () => {
+                const searchTerm = document.getElementById('autoComplete').value;
+                const queryParams = new URLSearchParams();
+                queryParams.set("search", searchTerm)
+                const source = await fetch(`https://mrj4id3r7d.execute-api.ap-southeast-2.amazonaws.com/Prod/address?${queryParams.toString()}`);
+                const data = await source.json();
+                return data.addresses
+            },
+            key: ["ADDRESS_AS_TEXT"]
+        },
+        resultsList: {
+            render: true,
+            maxResults: 10,
+            idName: "address_show",
+            className: "address_list",
+            destination: "#addressList",
+            container: (element, data) => {
+                element.setAttribute("data-parent", "food-list");
+            },
+            noResults: (list, query) => {
+                const message = document.createElement("div");
+                message.setAttribute("class", "no_result");
+                message.innerHTML = `<span>Found No Results for "${query}"</span>`;
+                list.appendChild(message);
+            },
+        },
+        resultItem: {
+            highlight: {
+                render: false
+            },
+            content: (data, element) => {
+                element.innerHTML = JSON.stringify(data.value);
+            },
+        },
+        onSelection: (item) => {
+        }
+    });
+</script>
+</body>
+</html>
